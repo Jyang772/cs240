@@ -1,0 +1,80 @@
+justin@justin-ThinkPad-W530:~/Documents/cs240/hw3$ cat typescript
+Script started on Mon 29 Feb 2016 05:00:58 PM EST
+justin@justin-ThinkPad-W530:~/Documents/cs240/hw3$ gdb show
+showbits         showconsolefont  showkey          
+showchar         showfont         showrgb          
+justin@justin-ThinkPad-W530:~/Documents/cs240/hw3$ gdb showbits
+GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.2) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from showbits...done.
+(gdb) b main
+Breakpoint 1 at 0x4006fe: file showxbits.c, line 26.
+(gdb) r
+Starting program: /home/justin/Documents/cs240/hw3/showbits 
+
+Breakpoint 1, main () at showxbits.c:26
+26	int main() {
+(gdb) s
+28	  int m=0, n = 0x79FEB220;
+(gdb) s
+30	  itox( hexstring, n);
+(gdb) n
+in itox, processing 2046734880
+33	  strcpy( hexstring, "6BCD7890");
+(gdb) n
+34	  m = xtoi(hexstring);
+(gdb) n
+in xtoi, processing 6BCD7890
+37	  m= xtoi(hexstring);
+(gdb) s
+xtoi (hexstring=0x7fffffffdf50 "6BCD7890") at xbits.c:58
+58	  printf("in xtoi, processing %s\n", hexstring);
+(gdb) l
+53	}
+54	
+55	/* function converts hexstring array to equivalent integer value  */
+56	
+57	int xtoi( char hexstring[]) {
+58	  printf("in xtoi, processing %s\n", hexstring);
+59		
+60		int i, k, length;
+61		int sum = 0;
+62		length = strlen(hexstring);
+(gdb) bt
+#0  xtoi (hexstring=0x7fffffffdf50 "6BCD7890") at xbits.c:58
+#1  0x0000000000400759 in main () at showxbits.c:37
+(gdb) s
+__printf (format=0x400d20 "in xtoi, processing %s\n") at printf.c:28
+28	printf.c: No such file or directory.
+(gdb) s
+32	in printf.c
+(gdb) s
+28	in printf.c
+(gdb) n
+33	in printf.c
+(gdb) n
+32	in printf.c
+(gdb) n
+33	in printf.c
+(gdb) n
+in xtoi, processing 6BCD7890
+37	in printf.c
+(gdb) n
+xtoi (hexstring=0x7fffffffdf50 "6BCD7890") at xbits.c:61
+61		int sum = 0;
+(gdb) bt
+owbits -lm -gstring=0x7fffffffdf50 "6BCD7890") at xbits.c:61       xbits.c -o sh 
+
+Script done on Mon 29 Feb 2016 05:06:22 PM EST

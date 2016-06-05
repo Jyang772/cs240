@@ -1,0 +1,6 @@
+//Justin Yang
+
+
+From the output of explore, it is clear that main() is pushed onto the stack followed by foobar(). We can access local variables in main() from foobar() because the local variables are stored contigiously in memory. 
+However, on some machines, the compiler has stack-protector enabled by default. This will cause extra space to be allocated on the stack, as well as them being placed in a different order. 
+I therefore also tried compiling with the -fno-stack-protector flag on gcc.  

@@ -1,0 +1,65 @@
+address of array[0]: 0xff9abf88
+value of a: 13579753
+value of b: 24680864
+value of c: aaaa5555
+value of d: 5555aaaa
+
+value of ap: 0x804a028
+value of bp: 0x804a02c
+value of cp: 0x804a030
+value of dp: 0xff9abf84
+
+value of array[0]: 1010101
+value of array[1]: 1
+value of array[2]: 804a028
+value of array[3]: 804a02c
+value of array[4]: 804a030
+value of array[5]: ff9abf84
+
+***************
+Entering foobar
+***************
+
+address of array[0]: 0xff9abf58
+
+automatic variable array address: 0xff9abf58
+10101010
+1
+0
+0
+ff9abfa8
+80485eb
+13579753
+5555aaaa
+804a028
+ff9abf84
+1
+5555aaaa
+1010101
+6
+804a028
+804a02c
+804a030
+ff9abf84
+8048670
+0
+0
+f758fa83
+1
+ff9ac044
+ff9ac04c
+f7753cea
+1
+ff9ac044
+ff9abfe4
+804a018
+804823c
+f7720000
+0
+0
+0
+cc8df60
+88433b71
+0
+0
+0

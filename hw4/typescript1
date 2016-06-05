@@ -1,0 +1,209 @@
+Script started on Thu 17 Mar 2016 12:59:28 PM EDT
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ ls -l
+total 48
+-rw-rw-r-- 1 justin justin   176 Mar 17 12:58 calc.h
+-rw-rw-r-- 1 justin justin    33 Mar 17 12:45 calc.in
+-rwxrwxr-x 1 justin justin 13275 Mar 17 12:58 [0m[01;32mcalcit[0m
+-rw-rw-r-- 1 justin justin   471 Mar 17 12:58 getch.c
+-rw-rw-r-- 1 justin justin   782 Mar 17 12:57 getop.c
+-rw-rw-r-- 1 justin justin  1449 Mar 17 12:58 main.c
+-rw-r--r-- 1 justin justin  1394 Mar 16 23:17 makefile
+-rw-r--r-- 1 justin justin  1240 Mar 17 12:56 makefile2
+-rw-rw-r-- 1 justin justin   553 Mar 17 12:57 stack.c
+-rw-rw-r-- 1 justin justin     0 Mar 17 12:59 typescript1
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ cat getch.c
+//Justin Yang
+//03-17-2016
+
+#include <stdio.h>
+#include "calc.h"
+#define BUFSIZE 100
+
+char buf[BUFSIZE];  /* buffer for ungetch */
+int  bufp = 0;      /* next free position in buf */
+
+int getch(void)     /* get a (possibly pushed back) character */
+{
+    return (bufp > 0) ? buf[--bufp] : getchar();
+}
+
+void ungetch(int c) /* push character back on input */
+{
+    if (bufp >= BUFSIZE)
+        printf("ungetch: too many characters\n");
+    else
+        buf[bufp++] = c;
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ cat getop.c
+//Justin Yang!
+//03-17-2016
+#include <stdio.h>
+#include <ctype.h>
+#include "calc.h"
+
+int getop(char s[])
+{
+    int i, c, t; 
+    while ((s[0] = c = t = getch()) == ' ' || c == '\t');
+    s[1] = '\0';
+
+    i = 0;
+    if (!isdigit(c) && c != '.') {         /* collect integer part */
+	if(c == '-' && (isdigit(s[++i] = c = getch())))
+		;
+	else if(c == '\n' && s[i-1] == '-') {
+		ungetch(c);
+		return '-';
+		}
+	else  
+		return t; //t since c would have the value of getch() ; ex. ' '
+	}
+	
+    if(isdigit(c))
+		while(isdigit(s[++i] = c = getch()));
+    if (c == '.')                       /* collect fraction part */
+        while (isdigit(s[++i] = c = getch()));
+    s[i] = '\0';                        /* terminate string */
+    if (c != EOF)
+        ungetch(c);
+    return NUMBER;
+}
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ cat stack.c
+//Justin Yang
+//03-17-2016
+#include <stdio.h>
+#include "calc.h"
+
+#define MAXVAL 100
+
+int sp = 0;
+int val[MAXVAL];
+
+/*void viewstack(void)
+{
+	int i;
+	printf("\nstack:\n");
+	for(i = sp - 1; i >= 0; i--)
+		printf("%lf\n", val[i]);
+}
+*/
+void push(double f)
+{
+    if (sp < MAXVAL)
+        val[sp++] = f;
+    else
+        printf("error: stack full, can't push %g\n", f);
+}
+
+/* pop:  pop and return top value from stack */
+int pop(void)
+{
+    if (sp > 0)
+        return val[--sp];
+    else {
+        printf("error: stack empty\n");
+        return 0.0;
+    }
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ cat main.c
+//Justin Yang
+//03-17-2016
+
+#include <stdio.h>
+#include <stdlib.h>   /* EXIT_SUCCESS, atof() */
+#include <math.h>     /* fmod() */
+#include "calc.h"
+
+#define MAXOP   100   /* max size of operand or operator */
+
+
+
+/* reverse Polish calculator */
+int main(void)
+{
+    int type;
+    int op2;
+    char s[MAXOP];
+
+    while ((type = getop(s)) != EOF) {
+	switch (type) {
+        case NUMBER:
+            push(atoi(s));
+            break;
+        case '+':
+            push(pop() + pop());
+            break;
+        case '*':
+            push(pop() * pop());
+            break;
+        case '-':
+            op2 = pop();
+            push(pop() - op2);
+            break;
+        case '/':
+            op2 = pop();
+            if (op2 != 0.0)
+                push(pop() / op2);
+            else
+                printf("error: zero devisor\n");
+            break;
+        case '%':
+            op2 = pop();
+            if (op2 != 0.0)
+                //push(fmod(pop(), op2));
+		push(pop() % op2);
+            else
+                printf("error: zero devisor\n");
+            break;
+        case '^':
+		push(pop() ^ pop());
+		break;
+	case '~':
+		push(~pop());
+		break;
+	case '&':
+		push(pop() & pop());
+		break;
+	case '|':
+		push(pop() | pop());
+		break;
+	case '\n':
+            printf("\t%d\n", pop());
+            break;
+        default:
+            printf("error: unknown command %s\n", s);
+            break;
+        }
+    }
+    return EXIT_SUCCESS;
+}
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ cat calc.h
+//Justin Yang
+//03-17-2016
+
+#ifndef CALC_H
+#define CALC_H
+
+#define NUMBER 0
+
+int getop(char []);
+void push(double);
+int pop(void);
+int getch(void);
+void ungetch(int);
+
+#endif 
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ make
+gcc -m64  -c -o main.o main.c
+gcc -m64  -c -o getop.o getop.c
+gcc -m64  -c -o stack.o stack.c
+gcc -m64  -c -o getch.o getch.c
+gcc -m64  -g -o calcit main.o getop.o stack.o getch.o -lm
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ ./calcit < calc.in
+	-1
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ exit
+exit
+
+Script done on Thu 17 Mar 2016 12:59:58 PM EDT

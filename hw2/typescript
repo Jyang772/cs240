@@ -1,0 +1,311 @@
+Script started on Wed 10 Feb 2016 06:10:57 PM EST
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ls -l
+total 96
+-rwxrwxr-x 1 justin justin 9313 Feb 10 17:58 [0m[01;32mhist[0m
+-rw-r--r-- 1 justin justin 1933 Feb 10 17:59 hist.c
+-rw-r--r-- 1 justin justin 1422 Feb 10 17:22 hw2_sample_output.txt
+-rwxrwxr-x 1 justin justin 8754 Feb  8 20:36 [01;32mreverse[0m
+-rw-rw-r-- 1 justin justin  763 Feb 10 18:06 reverse.c
+-rw-r--r-- 1 justin justin  268 Feb  8 20:37 reverse.in
+-rw-rw-r-- 1 justin justin   74 Feb  3 20:09 test.in
+-rwxrwxr-x 1 justin justin 8726 Feb  8 20:43 [01;32mtrim[0m
+-rw-rw-r-- 1 justin justin 1066 Feb  8 20:43 trim.c
+-rw-rw-r-- 1 justin justin 1065 Feb  3 20:49 trim.c~
+-rw-r--r-- 1 justin justin   94 Feb  3 20:06 trim.in
+-rw-rw-r-- 1 justin justin   74 Feb  8 20:43 trim.out
+-rw-rw-r-- 1 justin justin 1065 Feb  3 20:49 trim_r.c
+-rw-rw-r-- 1 justin justin    0 Feb 10 18:10 typescript
+-rwxrwxr-x 1 justin justin 9234 Feb 10 18:10 [01;32mvt[0m
+-rw-rw-r-- 1 justin justin 1586 Feb 10 18:02 vt.c
+-rw-r--r-- 1 justin justin   12 Feb 10 17:22 vt.in
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ cat trim.c
+/*
+	Get line from user input. 
+	Parse line character by character starting from the end. 
+	If character is '\t' or ' ', continue iterating.
+	Place '\0' at the beginning of trailing tabs and blank spaces
+*/
+
+#include <stdio.h>
+#define MAXLINE 1000
+
+int getLine(char s[],int lim);
+void trim(char s[],int length);
+
+int main(void)
+{
+	int c, length;
+	char line[MAXLINE];
+
+	
+
+	
+	while((length = getLine(line,MAXLINE)) > 0)
+	//length = getLine(line,MAXLINE);
+	{
+		trim(line,length);
+		printf("%s",line);
+	}
+
+}
+
+
+int getLine(char s[], int lim)
+{
+	int c, i;
+	for(i=0; i<lim-1 && (c=getchar()) != EOF && c != '\n'; i++)
+		s[i] = c;
+	
+	//printf("%d\n",i);
+	if(c == '\n'){	
+		s[i] = '\n';
+		i++;
+		s[i] = '\0';
+	}
+	//printf("%d\n",i);
+	
+	//s[i] = '\0';
+
+
+	
+
+	return i;
+}
+
+
+void trim(char s[], int length)
+{
+	int i;
+	int newline = 0;
+	//printf("%d\n",length);
+	for(i=length-1; i>=0 && (s[i] == '\t' || s[i] == ' ' || s[i] == '\n'); i--)
+	{
+		if(s[i] == '\n' && i != 0)
+			newline = 1;
+		s[i] = '\0';
+	}
+	if(newline){
+		s[i+1] = '\n';
+		s[i+2] = '\0';
+	}
+	//printf("%d\n",i);
+}	
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ cat reverse.c
+/*
+ * Read each line.
+ * Call Reverse(), which iterates through each line starting from the end.
+ * Iteration begins at length-2, to skip '\0' and '\n' characters.
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#define MAXLINE 1000
+
+
+int getLine(char line[], int maxline);
+void reverse(char line[]);
+
+char line[MAXLINE];
+
+int main()
+{
+
+	while(getLine(line,MAXLINE)>0){
+		reverse(line);
+	}	
+	return 0;
+}
+
+
+
+int getLine(char line[], int lim){
+
+	int i,c;
+	for(i=0; i<lim-1 && (c = getchar()) != EOF && c != '\n' ; i++)
+		line[i] = c;
+
+	if(c == '\n'){
+		line[i] = '\n';
+		++i;
+	}
+	
+	line[i] = '\0';	
+
+	return i;
+}
+
+
+void reverse(char line[]){
+	
+	int i;
+	for(i=strlen(line)-2;i>=0; i--) //skip '\0' and newline as first character
+		printf("%c",line[i]);
+	printf("\n");
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ cat vt.c
+/*
+ * Read each line and print corresponding index in asciiname as ASCII and HEX
+*/
+
+
+#include <stdio.h>
+#define MAXLINE 1000
+
+char line[MAXLINE];
+
+char asciiname[] =
+        "NUL\0"  "SOH\0"  "STX\0"  "ETX\0"  "EOT\0"  "ENQ\0"  "ACK\0"  "BEL\0"
+        " BS\0"  " HT\0"  " NL\0"  " VT\0"  " NP\0"  " CR\0"  " SO\0"  " SI\0"
+        "DLE\0"  "DC1\0"  "DC2\0"  "DC3\0"  "DC4\0"  "NAK\0"  "SYN\0"  "ETB\0"
+        "CAN\0"  " EM\0"  "SUB\0"  "ESC\0"  " FS\0"  " GS\0"  " RS\0"  " VS\0"
+        " SP\0"  "  !\0"  "  \"\0" "  #\0"  "  $\0"  "  %\0"  "  &\0"  "  '\0"
+        "  (\0"  "  )\0"  "  *\0"  "  +\0"  "  ,\0"  "  -\0"  "  .\0"  "  /\0"
+        "  0\0"  "  1\0"  "  2\0"  "  3\0"  "  4\0"  "  5\0"  "  6\0"  "  7\0"
+        "  8\0"  "  9\0"  "  :\0"  "  ;\0"  "  <\0"  "  =\0"  "  >\0"  "  ?\0"
+        "  @\0"  "  A\0"  "  B\0"  "  C\0"  "  D\0"  "  E\0"  "  F\0"  "  G\0"
+        "  H\0"  "  I\0"  "  J\0"  "  K\0"  "  L\0"  "  M\0"  "  N\0"  "  O\0"
+        "  P\0"  "  Q\0"  "  R\0"  "  S\0"  "  T\0"  "  U\0"  "  V\0"  "  W\0"
+        "  X\0"  "  Y\0"  "  Z\0"  "  [\0"  "  \\\0" "  ]\0"  "  ^\0"  "  _\0"
+        "  `\0"  "  a\0"  "  b\0"  "  c\0"  "  d\0"  "  e\0"  "  f\0"  "  g\0"
+        "  h\0"  "  i\0"  "  j\0"  "  k\0"  "  l\0"  "  m\0"  "  n\0"  "  o\0"
+        "  p\0"  "  q\0"  "  r\0"  "  s\0"  "  t\0"  "  u\0"  "  v\0"  "  w\0"
+        "  x\0"  "  y\0"  "  z\0"  "  {\0"  "  |\0"  "  }\0"  "  ~\0"  "DEL\0"
+        ;
+
+
+main ()
+{    
+    int c;
+    while((c=getchar()) != EOF)
+        printf("%s  %x\n",&asciiname[4*c],c);
+
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ cat hist.c
+/*
+ * Create a second array asciiCount that will store number of occurence of character.
+ * Read each line and increment corresponding index in asciiCount
+ * Print out histogram
+*/
+
+
+#include <stdio.h>
+#define MAXLINE 1000
+
+char line[MAXLINE];
+int asciiCount[128];
+char asciiname[] =
+        "NUL\0"  "SOH\0"  "STX\0"  "ETX\0"  "EOT\0"  "ENQ\0"  "ACK\0"  "BEL\0"
+        " BS\0"  " HT\0"  " NL\0"  " VT\0"  " NP\0"  " CR\0"  " SO\0"  " SI\0"
+        "DLE\0"  "DC1\0"  "DC2\0"  "DC3\0"  "DC4\0"  "NAK\0"  "SYN\0"  "ETB\0"
+        "CAN\0"  " EM\0"  "SUB\0"  "ESC\0"  " FS\0"  " GS\0"  " RS\0"  " VS\0"
+        " SP\0"  "  !\0"  "  \"\0" "  #\0"  "  $\0"  "  %\0"  "  &\0"  "  '\0"
+        "  (\0"  "  )\0"  "  *\0"  "  +\0"  "  ,\0"  "  -\0"  "  .\0"  "  /\0"
+        "  0\0"  "  1\0"  "  2\0"  "  3\0"  "  4\0"  "  5\0"  "  6\0"  "  7\0"
+        "  8\0"  "  9\0"  "  :\0"  "  ;\0"  "  <\0"  "  =\0"  "  >\0"  "  ?\0"
+        "  @\0"  "  A\0"  "  B\0"  "  C\0"  "  D\0"  "  E\0"  "  F\0"  "  G\0"
+        "  H\0"  "  I\0"  "  J\0"  "  K\0"  "  L\0"  "  M\0"  "  N\0"  "  O\0"
+        "  P\0"  "  Q\0"  "  R\0"  "  S\0"  "  T\0"  "  U\0"  "  V\0"  "  W\0"
+        "  X\0"  "  Y\0"  "  Z\0"  "  [\0"  "  \\\0" "  ]\0"  "  ^\0"  "  _\0"
+        "  `\0"  "  a\0"  "  b\0"  "  c\0"  "  d\0"  "  e\0"  "  f\0"  "  g\0"
+        "  h\0"  "  i\0"  "  j\0"  "  k\0"  "  l\0"  "  m\0"  "  n\0"  "  o\0"
+        "  p\0"  "  q\0"  "  r\0"  "  s\0"  "  t\0"  "  u\0"  "  v\0"  "  w\0"
+        "  x\0"  "  y\0"  "  z\0"  "  {\0"  "  |\0"  "  }\0"  "  ~\0"  "DEL\0"
+        ;
+
+
+main ()
+{    
+    int c;
+    while((c=getchar()) != EOF)
+        asciiCount[c]++;
+
+    printf("DEC\tHEX\tASCII NAME\tCOUNT\n");
+
+    int i;
+    for(i=0; i< 128; i++)
+    {
+        if(asciiCount[i] != 0)
+        printf("%3d\t%3x\t%10s\t%5d\n",i,i,(asciiname+(4*i)),asciiCount[i]); //messing with pointer arithmetic
+
+    }
+
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ./r[K[K[K./trim < trin.,[K[K[Km.in
+		Now is the
+		Time for
+		all good men to
+		come to the aid of the party.
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ./reverse < reverse.in
+?semordnilap fo draeh uoy evaH
+
+:gniteem no ,nedE fo nedrag eht nI
+
+".madA m'I ,madaM"
+
+:taefed tsrif sih retfa ytilibapac sih no noelopaN
+
+".ablE was I ere I saw elbA"
+
+:teid no ,esruoc fo dnA
+
+".doc no teid I .ssentaf a stneverp reven tsaf A !tnessid I :eton ,coD"
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ./vt < vt.in
+SOH  1
+STX  2
+  }  7d
+  ~  7e
+  a  61
+  ,  2c
+  b  62
+  z  7a
+  \  5c
+DEL  7f
+  Z  5a
+ NL  a
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ./hist < trim.in
+DEC	HEX	ASCII NAME	COUNT
+  9	  9	        HT	   10
+ 10	  a	        NL	    5
+ 32	 20	        SP	   29
+ 46	 2e	         .	    1
+ 78	 4e	         N	    1
+ 84	 54	         T	    1
+ 97	 61	         a	    3
+ 99	 63	         c	    1
+100	 64	         d	    2
+101	 65	         e	    6
+102	 66	         f	    2
+103	 67	         g	    1
+104	 68	         h	    3
+105	 69	         i	    3
+108	 6c	         l	    2
+109	 6d	         m	    3
+110	 6e	         n	    1
+111	 6f	         o	    8
+112	 70	         p	    1
+114	 72	         r	    2
+115	 73	         s	    1
+116	 74	         t	    6
+119	 77	         w	    1
+121	 79	         y	    1
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ ./hist < vt.in
+DEC	HEX	ASCII NAME	COUNT
+  1	  1	       SOH	    1
+  2	  2	       STX	    1
+ 10	  a	        NL	    1
+ 44	 2c	         ,	    1
+ 90	 5a	         Z	    1
+ 92	 5c	         \	    1
+ 97	 61	         a	    1
+ 98	 62	         b	    1
+122	 7a	         z	    1
+125	 7d	         }	    1
+126	 7e	         ~	    1
+127	 7f	       DEL	    1
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240justin@justin-ThinkPad-W530:~/Documents/cs240$ exit
+exit
+
+Script done on Wed 10 Feb 2016 06:12:57 PM EST

@@ -1,0 +1,72 @@
+//Justin Yang
+//03-17-2016
+
+#include <stdio.h>
+#include <stdlib.h>   /* EXIT_SUCCESS, atof() */
+#include <math.h>     /* fmod() */
+#include "calc.h"
+
+#define MAXOP   100   /* max size of operand or operator */
+
+
+
+/* reverse Polish calculator */
+int main(void)
+{
+    int type;
+    int op2;
+    char s[MAXOP];
+
+    while ((type = getop(s)) != EOF) {
+	switch (type) {
+        case NUMBER:
+            push(atoi(s));
+            break;
+        case '+':
+            push(pop() + pop());
+            break;
+        case '*':
+            push(pop() * pop());
+            break;
+        case '-':
+            op2 = pop();
+            push(pop() - op2);
+            break;
+        case '/':
+            op2 = pop();
+            if (op2 != 0.0)
+                push(pop() / op2);
+            else
+                printf("error: zero devisor\n");
+            break;
+        case '%':
+            op2 = pop();
+            if (op2 != 0.0)
+                //push(fmod(pop(), op2));
+		push(pop() % op2);
+            else
+                printf("error: zero devisor\n");
+            break;
+        case '^':
+		push(pop() ^ pop());
+		break;
+	case '~':
+		push(~pop());
+		break;
+	case '&':
+		push(pop() & pop());
+		break;
+	case '|':
+		push(pop() | pop());
+		break;
+	case '\n':
+            printf("\t%d\n", pop());
+            break;
+        default:
+            printf("error: unknown command %s\n", s);
+            break;
+        }
+    }
+    return EXIT_SUCCESS;
+}
+

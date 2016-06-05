@@ -1,0 +1,51 @@
+Script started on Thu 17 Mar 2016 01:00:07 PM EDT
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ make clean -f makefile2
+rm *.o
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ make -f makefile2
+cc -m64    -c -o main.o main.c
+cc -m64    -c -o getop.o getop.c
+cc -m64    -c -o stack.o stack.c
+cc -m64    -c -o getch.o getch.c
+gcc -m64  -g -o calcit main.o getop.o stack.o getch.o -lm
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ vi getop.c
+[?1049h[?1h=[2;1H▽[6n[1;1H  [1;1H[1;24r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[24;1H"getop.c" 34L, 782C[>c[1;1H[34m//Justin Yang!
+//03-17-2016[m
+[35m#include [m[31m<stdio.h>[m
+[35m#include [m[31m<ctype.h>[m
+[35m#include [m[31m"calc.h"[m
+
+[32mint[m getop([32mchar[m s[])
+{
+    [32mint[m i, c, t;
+    [33mwhile[m ((s[[31m0[m] = c = t = getch()) == [31m' '[m || c == [35m'\t'[m);
+    s[[31m1[m] = [35m'\0'[m;[13;5Hi = [31m0[m;
+    [33mif[m (!isdigit(c) && c != [31m'.'[m) {[9C[34m/* collect integer part */[m[15;9H[33mif[m(c == [31m'-'[m && (isdigit(s[++i] = c = getch())))[16;17H;[17;9H[33melse[m [33mif[m(c == [35m'\n'[m && s[i-[31m1[m] == [31m'-'[m) {[18;17Hungetch(c);[19;17H[33mreturn[m [31m'-'[m;[20;17H}[21;9H[33melse[22;17Hreturn[m t; [34m//t since c would have the value of getch() ; ex. ' '[m[23;9H}[24;63H1,1[11CTop[1;1H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[24;1H[1m-- INSERT --[m[24;13H[K[24;63H1,15[10CTop[1;15H[?12l[?25h[?25l[34m![m[24;66H6[1;16H[?12l[?25h[24;1H[K[1;15H[?25l[24;63H1,15[10CTop[1;15H[?12l[?25h[?25l[24;63H[K[24;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"getop.c" 34L, 783C written
+[?1l>[?12l[?25h[?1049l]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ make -f makefile2
+cc -m64    -c -o getop.o getop.c
+gcc -m64  -g -o calcit main.o getop.o stack.o getch.o -lm
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ touch calc.h
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ make -f makefile2
+cc -m64    -c -o main.o main.c
+cc -m64    -c -o getop.o getop.c
+gcc -m64  -g -o calcit main.o getop.o stack.o getch.o -lm
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ diff -w makefile makefile2
+25c25
+< 		$(cc) $(CFLAGS) -c -o main.o main.c
+---
+> 
+27c27
+< 		$(cc) $(CFLAGS) -c -o getop.o getop.c
+---
+> 
+29c29
+< 		$(cc) $(CFLAGS) -c -o stack.o stack.c
+---
+> 
+31c31
+< 		$(cc) $(CFLAGS) -c -o getch.o getch.c
+---
+> 
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw4justin@justin-ThinkPad-W530:~/Documents/cs240/hw4$ exit
+exit
+
+Script done on Thu 17 Mar 2016 01:01:00 PM EDT

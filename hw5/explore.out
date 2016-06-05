@@ -1,0 +1,46 @@
+address of array[0]: 0xff82af08
+value of variable a: 13579753
+value of variable b: 24680864
+value of variable c: aaaa5555
+value of variable d: 5555aaaa
+
+value of ap: 0x804a024
+value of bp: 0x804a028
+value of cp: 0x804a02c
+value of dp: 0xff82af04
+value of array[0]: 1010101
+value of array[1]: 1
+value of array[2]: 804a024
+value of array[3]: 804a028
+value of array[4]: 804a02c
+value of array[5]: ff82af04
+value of array[6]: 80485d0
+value of array[7]: f76ac000
+value of array[8]: 0
+value of array[9]: f751ba83
+Entering foobar
+address of array[0]: 0xff82aec8
+value of array[0]: 10101010
+value of array[1]: 1
+value of array[2]: ff82af08
+value of array[3]: f7704938
+value of array[4]: ff82af28
+value of array[5]: 804855d
+value of array[6]: 13579753
+value of array[7]: 5555aaaa
+value of array[8]: 804a024
+value of array[9]: ff82af04
+value of array[10]: ff82af04
+value of array[11]: 2f
+value of array[12]: 804a000
+value of array[13]: 8048622
+value of array[14]: 1
+value of array[15]: 5555aaaa
+value of array[16]: 1010101
+value of array[17]: a
+value of array[18]: 804a024
+value of array[19]: 804a028
+value of array[20]: 804a02c
+value of array[21]: ff82af04
+value of array[22]: 80485d0
+value of array[23]: f76ac000

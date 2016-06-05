@@ -1,0 +1,224 @@
+Script started on Sat 09 Apr 2016 08:36:45 PM EDT
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ls -l 
+total 116
+-rw-rw-r-- 1 justin justin  501 Apr  9 20:33 ans.txt
+-rwxrwxr-x 1 justin justin 7754 Apr  2 16:54 [0m[01;32ma.out[0m
+-rwxrwxr-x 1 justin justin 8938 Mar 31 22:26 [01;32mexplore[0m
+-rw-r--r-- 1 justin justin 2156 Apr  2 19:09 explore.c
+-rw-rw-r-- 1 justin justin 1205 Apr  9 20:32 explore.out
+-rw-rw-r-- 1 justin justin 3198 Apr  7 20:34 [01;31mhw5.zip[0m
+-rw-rw-r-- 1 justin justin 1217 Apr  7 20:32 lineholder.c
+-rw-rw-r-- 1 justin justin  100 Apr  2 15:44 lineholder.h
+-rw-rw-r-- 1 justin justin 3232 Apr  7 20:32 lineholder.o
+-rw-rw-r-- 1 justin justin  244 Apr  7 16:13 Makefile
+-rw-rw-r-- 1 justin justin 4489 Apr  9 20:36 memo.txt
+-rw-r--r-- 1 justin justin  741 Mar 31 19:10 sample_explore.out
+-rwxrwxr-x 1 justin justin 9169 Apr  7 20:32 [01;32mtail[0m
+-rw-r--r-- 1 justin justin    0 Mar 31 19:10 tail0.in
+-rw-r--r-- 1 justin justin  145 Mar 31 19:10 tail1.in
+-rw-r--r-- 1 justin justin  198 Mar 31 19:10 tail2.in
+-rw-r--r-- 1 justin justin  219 Mar 31 19:10 tail3.in
+-rw-r--r-- 1 justin justin  447 Mar 31 19:10 tail4.in
+-rw-rw-r-- 1 justin justin  754 Apr  7 16:58 tail.c
+-rw-rw-r-- 1 justin justin 1984 Apr  7 16:58 tail.o
+-rwxrwxr-x 1 justin justin 8845 Apr  2 03:19 [01;32mtest[0m
+-rw-rw-r-- 1 justin justin  969 Apr  2 03:19 test.c
+-rw-rw-r-- 1 justin justin    0 Apr  9 20:36 typescript
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat tail.c
+//Justin Yang
+//Tail
+
+
+#include "lineholder.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define DEFAULT 10
+#define MAXLEN 1000
+
+int getLine(char[], int length);
+
+int main(int argc, char **argv) {
+
+	int len = 0;
+	//int n=atoi(argv[1]);
+	int n = 0;
+	char *ptr = NULL;
+	if(argc > 1 && argv[1][0] == '-') {		//Implement some getopt functionality
+		ptr = argv[1];
+		n = atoi(++ptr);
+	}
+	else						//If user hasn't specified n
+		n = DEFAULT;	
+	
+	char *test = init_lineholder(n);
+	while((getLine(test,MAXLEN)) > 0) {
+		insert_line(test);
+	}
+	print_lines();
+	return 0;
+}
+
+
+int getLine(char s[], int length) {
+	int c,i = 0;
+		
+	while((c=getchar()) != EOF && (c != '\n'))
+		s[i++] = c;
+	if(c == '\n')
+		s[i++] = c;
+	s[i] = '\0';
+	
+	return i;
+}
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat lineholder.c
+//Justin Yang
+//Lineholder
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAXLEN 1000	//For lineholder
+#define MAXLINES 2000	//Maximum 2000 lines the user can specify to get
+
+char *lineptr[MAXLINES]; 
+char **lptr;
+int nlines=0, lines_read=0;
+
+char *init_lineholder(int n) {
+	
+	lptr = lineptr;	
+	nlines = n;		
+	char *line = (char*)malloc(sizeof(char)*MAXLEN);	//Each line can be >= 1000 chars
+	return line;
+}
+
+void insert_line(char *line) {
+	
+	++lines_read;
+
+	if(lines_read > nlines) {
+		free(lineptr[0]);						//Free first slot of lineptr
+		for(int i=0; i<nlines-1; i++) 
+			*(lineptr+i) = *(lineptr+i+1);				//Ripple pointers to the left by one.
+		lineptr[nlines-1] = (char*)malloc(sizeof(char)*strlen(line)+1);	//strlen doesn't count NULL | allocate space for line at last slot
+		strcpy(lineptr[nlines-1],line);
+	}
+	else {	//First fill up array to first n lines using ptr to beginning of **lineptr
+		*(lptr) = (char*)malloc(sizeof(char)*strlen(line)+1);
+		strcpy(*lptr,line);	
+		lptr++;
+	}
+
+}	
+
+void print_lines() {
+	
+	int i = 0;	
+	lptr = lineptr;					//User might request more lines than actually read.
+	while((i < lines_read) && (i++ < nlines)) {
+		printf("%s",*lptr);
+		free(*lptr++);
+	}
+}
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat lineholder.h
+//Justin Yang
+
+char *init_lineholder(int nlines);
+void insert_line(char *line);
+void print_lines();
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat m[KMakefile
+
+CC=gcc
+CFLAGS= -std=c11
+
+all:	tail
+
+tail:	tail.o lineholder.o
+	$(CC) $(CFLAGS) tail.o lineholder.o -o tail
+tail.o: tail.c lineholder.h
+	$(CC) $(CFLAGS) -c tail.c
+lineholder.o: lineholder.c 
+	$(CC) $(CFLAGS) -c lineholder.c
+clean:
+	rm *.o tail
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ make clean
+rm *.o tail
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ make
+gcc -std=c11 -c tail.c
+gcc -std=c11 -c lineholder.c
+gcc -std=c11 tail.o lineholder.o -o tail
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < test0.[K[K[K[K[Kail0.in
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < tail1.in
+1. Now is the time
+2. for all good men
+3. to come to the
+4. aid of their country.
+5. Now is the time
+6. for all good men
+7. (less than 10 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ [K]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < tail1.in[1P.in2.in
+1. Now is the time
+2. for all good men
+3. to come to the
+4. aid of their country.
+5. Now is the time
+6. for all good men
+7. to come to the
+8. aid of their country.
+9. Now is the time
+10. (10 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < tail2.in[1P.in3.in
+2. for all good men
+3. to come to the
+4. aid of their country.
+5. Now is the time
+6. for all good men
+7. to come to the
+8. aid of their country.
+9. Now is the time
+10. for all good men
+11. (11 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < tail3.in[1P.in5.in[1P.in4.in
+12. aid of their country.
+13. Now is the time
+14. for all good men
+15. to come to the
+16. aid of their country.
+17. Now is the time
+18. for all good men
+19. to come to the
+20. aid of their country.
+21. (twice as many lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail < tail4.in[C[1@-[1@5[1@ [C[C[C[C[C[C[C[1P.in0.in
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail -5 < tail0.in[1P.in1.in
+3. to come to the
+4. aid of their country.
+5. Now is the time
+6. for all good men
+7. (less than 10 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail -5 < tail1.in[1P.in2.in
+6. for all good men
+7. to come to the
+8. aid of their country.
+9. Now is the time
+10. (10 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail -5 < tail2.in[1P.in3.in
+7. to come to the
+8. aid of their country.
+9. Now is the time
+10. for all good men
+11. (11 lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail -5 < tail3.in[C[1P.in4.in
+17. Now is the time
+18. for all good men
+19. to come to the
+20. aid of their country.
+21. (twice as many lines)
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ ./tail -5 < tail4.in[K./tail -5 < tail4.in[K./tail -5 < tail4.in[Kexit
+exit
+
+Script done on Sat 09 Apr 2016 08:38:45 PM EDT

@@ -1,0 +1,136 @@
+Script started on Sat 09 Apr 2016 08:33:50 PM EDT
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat explore.c
+//Justin Yang
+//Modified for hw5
+
+/* explore.c: program to explore memory locations via pointers
+   bob wilson 03/13/2003
+   modified by Ron Cheung 7/8/2003   */
+
+#include <stdio.h>
+
+/* external variable */
+int a = 0x13579753;
+
+/* external static variable */
+static int b = 0x24680864;
+
+/* function declarations */
+void foobar(int, int, int *, int *);
+
+int main(void) {
+  static int c = 0xaaaa5555;   /* local static variable */
+  int d = 0x5555aaaa;          /* local automatic variable */
+  int *ap = &a;                /* pointer to external variable a */
+  int *bp = &b;                /* pointer to external static variable b */
+  int *cp = &c;                /* pointer to local static variable c */
+  int *dp = &d;                /* pointer to local automatic variable d */
+  int array[1] = {0x01010101}; /* array of one integer */
+  
+  /* Add code here to print the address of array[0].  */
+	printf("address of array[0]: %p\n",array);  
+  
+  
+  /* Add code here to print the values of variables a, b, c, d. */
+	printf("value of variable a: %x\n"
+		"value of variable b: %x\n"
+		"value of variable c: %x\n"
+		"value of variable d: %x\n",a,b,c,d);  
+  
+  
+  /* Add code here to print the values of pointers ap, bp, cp, dp. */
+ 	printf("\nvalue of ap: %p\n"
+		"value of bp: %p\n"
+		"value of cp: %p\n"
+		"value of dp: %p\n",ap,bp,cp,dp); 
+  
+
+  /* Add code here to print array[i] for i = 0 to high enough value.
+     (What we want to see here is the values of all the pointer variables
+     by incrementing out of the array and into the surrounding memory.) */
+	for(int i=0; i<10; i++) 
+		printf("value of array[%d]: %x\n",i,*(array+i)); 
+
+ 
+  /* Call subroutine foobar and pass arguments.  */
+  foobar(a, d, &a, &d);
+  
+  return 0;
+}
+
+/* foobar function definition */
+void foobar(int x, int y, int *xp, int *yp) {
+  int array[1] = {0x10101010};
+  
+  printf("Entering foobar\n");
+  
+  /* add code here to print address of array[0]  */
+	printf("address of array[0]: %p\n",array);
+  
+  
+  /* add code here to print array[i] for i = 0 to high enough value */
+	for(int i=0; i<24; i++) 
+		printf("value of array[%d]: %x\n",i,*(array+i));  
+  
+  return;
+}
+
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ cat t[Kexplore.out
+address of array[0]: 0xff82af08
+value of variable a: 13579753
+value of variable b: 24680864
+value of variable c: aaaa5555
+value of variable d: 5555aaaa
+
+value of ap: 0x804a024
+value of bp: 0x804a028
+value of cp: 0x804a02c
+value of dp: 0xff82af04
+value of array[0]: 1010101
+value of array[1]: 1
+value of array[2]: 804a024
+value of array[3]: 804a028
+value of array[4]: 804a02c
+value of array[5]: ff82af04
+value of array[6]: 80485d0
+value of array[7]: f76ac000
+value of array[8]: 0
+value of array[9]: f751ba83
+Entering foobar
+address of array[0]: 0xff82aec8
+value of array[0]: 10101010
+value of array[1]: 1
+value of array[2]: ff82af08
+value of array[3]: f7704938
+value of array[4]: ff82af28
+value of array[5]: 804855d
+value of array[6]: 13579753
+value of array[7]: 5555aaaa
+value of array[8]: 804a024
+value of array[9]: ff82af04
+value of array[10]: ff82af04
+value of array[11]: 2f
+value of array[12]: 804a000
+value of array[13]: 8048622
+value of array[14]: 1
+value of array[15]: 5555aaaa
+value of array[16]: 1010101
+value of array[17]: a
+value of array[18]: 804a024
+value of array[19]: 804a028
+value of array[20]: 804a02c
+value of array[21]: ff82af04
+value of array[22]: 80485d0
+value of array[23]: f76ac000
+]0;justin@justin-ThinkPad-W530: ~/Documents/cs240/hw5justin@justin-ThinkPad-W530:~/Documents/cs240/hw5$ exit
+exit
+
+Script done on Sat 09 Apr 2016 08:34:16 PM EDT
+
+Answers to questions:
+
+From the output of explore, it is clear that main() is pushed onto the stack followed by foobar(). We can access local variables in main() from foobar() because the local variables are stored contigiously in memory. 
+However, on some machines, the compiler has stack-protector enabled by default. This will cause extra space to be allocated on the stack, as well as them being placed in a different order. 
+
+I therefore also tried compiling with the -fno-stack-protector flag on gcc. This will disable that function.
+
